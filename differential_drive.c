@@ -1,6 +1,6 @@
 #include "stdlib.h"
 #include "math.h"
-#include "differential_drive/differential_drive.h"
+#include "differential_drive.h"
 
 #define NUM_WHEEL 2
 #define LEFT_WHEEL 0
