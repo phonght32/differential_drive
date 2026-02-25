@@ -28,7 +28,12 @@ extern "C" {
 #endif
 
 #include "stdint.h"
-#include "err_code.h"
+
+typedef enum {
+	DIFF_DRIVE_STATUS_SUCCESS = 0,		/*!< Success */
+	DIFF_DRIVE_STATUS_FAIL,				/*!< Fail */
+	DIFF_DRIVE_STATUS_INVALID_ARG,		/*!< Invalid argument */
+} diff_drive_status_t;
 
 typedef struct diff_drive *diff_drive_handle_t;
 
@@ -52,7 +57,7 @@ typedef struct
  *
  * @return
  *      - Handle structure: Success.
- *      - Others:           Fail.
+ *      - Others: Failed.
  */
 diff_drive_handle_t diff_drive_init(void);
 
@@ -63,10 +68,10 @@ diff_drive_handle_t diff_drive_init(void);
  * @param   cfg Configuration structure.
  *
  * @return
- *      - ERR_CODE_SUCCESS: Success.
- *      - Others:           Fail.
+ *      - DIFF_DRIVE_STATUS_SUCCESS: Success.
+ *      - Others: Failed.
  */
-err_code_t diff_drive_set_config(diff_drive_handle_t handle, diff_drive_cfg_t cfg);
+diff_drive_status_t diff_drive_set_config(diff_drive_handle_t handle, diff_drive_cfg_t cfg);
 
 /*
  * @brief   Configure differential drive to run.
@@ -74,10 +79,10 @@ err_code_t diff_drive_set_config(diff_drive_handle_t handle, diff_drive_cfg_t cf
  * @param 	handle Handle structure.
  *
  * @return
- *      - ERR_CODE_SUCCESS: Success.
- *      - Others:           Fail.
+ *      - DIFF_DRIVE_STATUS_SUCCESS: Success.
+ *      - Others: Failed.
  */
-err_code_t diff_drive_config(diff_drive_handle_t handle);
+diff_drive_status_t diff_drive_config(diff_drive_handle_t handle);
 
 /*
  * @brief   Calculate velocity for each wheel based on expected linear and angular velocity.
@@ -89,10 +94,10 @@ err_code_t diff_drive_config(diff_drive_handle_t handle);
  * @param 	right_wheel_vel Output velocity of right wheel.
  *
  * @return
- *      - ERR_CODE_SUCCESS: Success.
- *      - Others:           Fail.
+ *      - DIFF_DRIVE_STATUS_SUCCESS: Success.
+ *      - Others: Failed.
  */
-err_code_t diff_drive_calc_wheel_vel(diff_drive_handle_t handle,
+diff_drive_status_t diff_drive_calc_wheel_vel(diff_drive_handle_t handle,
 									 float lin_vel,
 									 float ang_vel,
 									 float *left_wheel_vel,
@@ -108,10 +113,10 @@ err_code_t diff_drive_calc_wheel_vel(diff_drive_handle_t handle,
  * @param 	right_tick Right tick.
  *
  * @return
- *      - ERR_CODE_SUCCESS: Success.
- *      - Others:           Fail.
+ *      - DIFF_DRIVE_STATUS_SUCCESS: Success.
+ *      - Others: Failed.
  */
-err_code_t diff_drive_get_tick(diff_drive_handle_t handle, int64_t *left_tick, int64_t *right_tick);
+diff_drive_status_t diff_drive_get_tick(diff_drive_handle_t handle, int64_t *left_tick, int64_t *right_tick);
 
 /*
  * @brief   Get position of wheels in radian.
@@ -123,10 +128,10 @@ err_code_t diff_drive_get_tick(diff_drive_handle_t handle, int64_t *left_tick, i
  * @param 	right_rad Right radian.
  *
  * @return
- *      - ERR_CODE_SUCCESS: Success.
- *      - Others:           Fail.
+ *      - DIFF_DRIVE_STATUS_SUCCESS: Success.
+ *      - Others: Failed.
  */
-err_code_t diff_drive_get_rad(diff_drive_handle_t handle, float *left_rad, float *right_rad);
+diff_drive_status_t diff_drive_get_rad(diff_drive_handle_t handle, float *left_rad, float *right_rad);
 
 /*
  * @brief   Get velocity of wheels in m/s.
@@ -138,10 +143,10 @@ err_code_t diff_drive_get_rad(diff_drive_handle_t handle, float *left_rad, float
  * @param 	right_vel Right velocity.
  *
  * @return
- *      - ERR_CODE_SUCCESS: Success.
- *      - Others:           Fail.
+ *      - DIFF_DRIVE_STATUS_SUCCESS: Success.
+ *      - Others: Failed.
  */
-err_code_t diff_drive_get_vel(diff_drive_handle_t handle, float *left_vel, float *right_vel);
+diff_drive_status_t diff_drive_get_vel(diff_drive_handle_t handle, float *left_vel, float *right_vel);
 
 /*
  * @brief   Calculate odometry.
@@ -153,10 +158,10 @@ err_code_t diff_drive_get_vel(diff_drive_handle_t handle, float *left_vel, float
  * @param 	theta Current yaw angel.
  *
  * @return
- *      - ERR_CODE_SUCCESS: Success.
- *      - Others:           Fail.
+ *      - DIFF_DRIVE_STATUS_SUCCESS: Success.
+ *      - Others: Failed.
  */
-err_code_t diff_drive_calc_odom(diff_drive_handle_t handle,
+diff_drive_status_t diff_drive_calc_odom(diff_drive_handle_t handle,
 								float step_time,
 								int32_t left_tick,
 								int32_t right_tick,
@@ -173,10 +178,10 @@ err_code_t diff_drive_calc_odom(diff_drive_handle_t handle,
  * @param 	odom_vel_ang Angular velocity.
  *
  * @return
- *      - ERR_CODE_SUCCESS: Success.
- *      - Others:           Fail.
+ *      - DIFF_DRIVE_STATUS_SUCCESS: Success.
+ *      - Others: Failed.
  */
-err_code_t diff_drive_get_odom(diff_drive_handle_t handle,
+diff_drive_status_t diff_drive_get_odom(diff_drive_handle_t handle,
 							   float *odom_pose_x,
 							   float *odom_pose_y,
 							   float *odom_pose_theta,

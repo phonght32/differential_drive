@@ -56,12 +56,12 @@ diff_drive_handle_t diff_drive_init(void)
 	return handle;
 }
 
-err_code_t diff_drive_set_config(diff_drive_handle_t handle, diff_drive_cfg_t cfg)
+diff_drive_status_t diff_drive_set_config(diff_drive_handle_t handle, diff_drive_cfg_t cfg)
 {
 	/* Check if handle structure is NULL */
 	if (handle == NULL)
 	{
-		return ERR_CODE_NULL_PTR;
+		return DIFF_DRIVE_STATUS_INVALID_ARG;
 	}
 
 	handle->wheel_radius = cfg.wheel_radius;
@@ -85,23 +85,23 @@ err_code_t diff_drive_set_config(diff_drive_handle_t handle, diff_drive_cfg_t cf
 	handle->odom_vel_ang = 0;
 	handle->odom_vel_lin = 0;
 
-	return ERR_CODE_SUCCESS;
+	return DIFF_DRIVE_STATUS_SUCCESS;
 }
 
-err_code_t diff_drive_config(diff_drive_handle_t handle)
+diff_drive_status_t diff_drive_config(diff_drive_handle_t handle)
 {
 	/* Check if handle structure is NULL */
 	if (handle == NULL)
 	{
-		return ERR_CODE_NULL_PTR;
+		return DIFF_DRIVE_STATUS_INVALID_ARG;
 	}
 
 	/* Nothing to do */
 
-	return ERR_CODE_SUCCESS;
+	return DIFF_DRIVE_STATUS_SUCCESS;
 }
 
-err_code_t diff_drive_calc_wheel_vel(diff_drive_handle_t handle,
+diff_drive_status_t diff_drive_calc_wheel_vel(diff_drive_handle_t handle,
 									 float lin_vel,
 									 float ang_vel,
 									 float *left_wheel_vel,
@@ -110,7 +110,7 @@ err_code_t diff_drive_calc_wheel_vel(diff_drive_handle_t handle,
 	/* Check if handle structure is NULL */
 	if (handle == NULL)
 	{
-		return ERR_CODE_NULL_PTR;
+		return DIFF_DRIVE_STATUS_INVALID_ARG;
 	}
 
 	float wheel_velocity_cmd[2];
@@ -124,52 +124,52 @@ err_code_t diff_drive_calc_wheel_vel(diff_drive_handle_t handle,
 	*left_wheel_vel = wheel_velocity_cmd[LEFT_WHEEL];
 	*right_wheel_vel = wheel_velocity_cmd[RIGHT_WHEEL];
 
-	return ERR_CODE_SUCCESS;
+	return DIFF_DRIVE_STATUS_SUCCESS;
 }
 
-err_code_t diff_drive_get_tick(diff_drive_handle_t handle, int64_t *left_tick, int64_t *right_tick)
+diff_drive_status_t diff_drive_get_tick(diff_drive_handle_t handle, int64_t *left_tick, int64_t *right_tick)
 {
 	/* Check if handle structure is NULL */
 	if (handle == NULL)
 	{
-		return ERR_CODE_NULL_PTR;
+		return DIFF_DRIVE_STATUS_INVALID_ARG;
 	}
 
 	*left_tick = handle->prev_tick[LEFT_WHEEL];
 	*right_tick = handle->prev_tick[RIGHT_WHEEL];
 
-	return ERR_CODE_SUCCESS;
+	return DIFF_DRIVE_STATUS_SUCCESS;
 }
 
-err_code_t diff_drive_get_rad(diff_drive_handle_t handle, float *left_rad, float *right_rad)
+diff_drive_status_t diff_drive_get_rad(diff_drive_handle_t handle, float *left_rad, float *right_rad)
 {
 	/* Check if handle structure is NULL */
 	if (handle == NULL)
 	{
-		return ERR_CODE_NULL_PTR;
+		return DIFF_DRIVE_STATUS_INVALID_ARG;
 	}
 
 	*left_rad = handle->prev_rad[LEFT_WHEEL];
 	*right_rad = handle->prev_rad[RIGHT_WHEEL];
 
-	return ERR_CODE_SUCCESS;
+	return DIFF_DRIVE_STATUS_SUCCESS;
 }
 
-err_code_t diff_drive_get_vel(diff_drive_handle_t handle, float *left_vel, float *right_vel)
+diff_drive_status_t diff_drive_get_vel(diff_drive_handle_t handle, float *left_vel, float *right_vel)
 {
 	/* Check if handle structure is NULL */
 	if (handle == NULL)
 	{
-		return ERR_CODE_NULL_PTR;
+		return DIFF_DRIVE_STATUS_INVALID_ARG;
 	}
 
 	*left_vel = handle->prev_vel[LEFT_WHEEL];
 	*right_vel = handle->prev_vel[RIGHT_WHEEL];
 
-	return ERR_CODE_SUCCESS;
+	return DIFF_DRIVE_STATUS_SUCCESS;
 }
 
-err_code_t diff_drive_calc_odom(diff_drive_handle_t handle,
+diff_drive_status_t diff_drive_calc_odom(diff_drive_handle_t handle,
 								float step_time,
 								int32_t left_tick,
 								int32_t right_tick,
@@ -178,7 +178,7 @@ err_code_t diff_drive_calc_odom(diff_drive_handle_t handle,
 	/* Check if handle structure is NULL */
 	if (handle == NULL)
 	{
-		return ERR_CODE_NULL_PTR;
+		return DIFF_DRIVE_STATUS_INVALID_ARG;
 	}
 
 	float wheel_l = 0.0f, wheel_r = 0.0f; // rotation value of wheel [rad]
@@ -186,7 +186,7 @@ err_code_t diff_drive_calc_odom(diff_drive_handle_t handle,
 	float lin_vel = 0.0f, ang_vel = 0.0f; // v = translational velocity [m/s], w = rotational velocity [rad/s]
 
 	if (step_time == 0)
-		return ERR_CODE_FAIL;
+		return DIFF_DRIVE_STATUS_FAIL;
 
 	wheel_l = handle->tick_to_rad * (float)left_tick;
 	wheel_r = handle->tick_to_rad * (float)right_tick;
@@ -222,10 +222,10 @@ err_code_t diff_drive_calc_odom(diff_drive_handle_t handle,
 	handle->prev_vel[RIGHT_WHEEL] = wheel_r / step_time;
 	handle->prev_theta = theta;
 
-	return ERR_CODE_SUCCESS;
+	return DIFF_DRIVE_STATUS_SUCCESS;
 }
 
-err_code_t diff_drive_get_odom(diff_drive_handle_t handle,
+diff_drive_status_t diff_drive_get_odom(diff_drive_handle_t handle,
 							   float *odom_pose_x,
 							   float *odom_pose_y,
 							   float *odom_pose_theta,
@@ -235,7 +235,7 @@ err_code_t diff_drive_get_odom(diff_drive_handle_t handle,
 	/* Check if handle structure is NULL */
 	if (handle == NULL)
 	{
-		return ERR_CODE_NULL_PTR;
+		return DIFF_DRIVE_STATUS_INVALID_ARG;
 	}
 
 	*odom_pose_x = handle->odom_pose_x;
@@ -244,5 +244,5 @@ err_code_t diff_drive_get_odom(diff_drive_handle_t handle,
 	*odom_vel_lin = handle->odom_vel_lin;
 	*odom_vel_ang = handle->odom_vel_ang;
 
-	return ERR_CODE_SUCCESS;
+	return DIFF_DRIVE_STATUS_SUCCESS;
 }
